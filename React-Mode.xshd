@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="React" extensions=".js;.jsx;.ts;.tsx" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+    <Color name="Comment" foreground="#57A64A" exampleText="// comment" />
+    <Color name="String" foreground="#D69D85" exampleText="'string'" />
+    <Color name="Keywords" foreground="#569CD6" fontWeight="bold" exampleText="const a = 1;" />
+    <Color name="TypeScriptKeywords" foreground="#4EC9B0" fontWeight="bold" exampleText="interface Props {}" />
+    <Color name="Hooks" foreground="#C586C0" fontWeight="bold" exampleText="useState(0);" />
+    <Color name="Numbers" foreground="#B5CEA8" exampleText="3.14" />
+    <Color name="HtmlTag" foreground="#A31515" exampleText="&lt;div&gt;" />
+    <Color name="HtmlAttribute" foreground="#FF0000" exampleText="className=&quot;container&quot;" />
+
+    <RuleSet>
+        <!-- Single line comments -->
+        <Span color="Comment" begin="//" />
+        
+        <!-- Multi line comments -->
+        <Span color="Comment" multiline="true" begin="/\*" end="\*/" />
+        
+        <!-- Strings -->
+        <Span color="String">
+            <Begin>"</Begin>
+            <End>"</End>
+            <RuleSet>
+                <Span begin="\\" end="." />
+            </RuleSet>
+        </Span>
+
+        <Span color="String">
+            <Begin>'</Begin>
+            <End>'</End>
+            <RuleSet>
+                <Span begin="\\" end="." />
+            </RuleSet>
+        </Span>
+
+        <!-- Template literals -->
+        <Span color="String" multiline="true">
+            <Begin>`</Begin>
+            <End>`</End>
+            <RuleSet>
+                <Span begin="\\" end="." />
+            </RuleSet>
+        </Span>
+
+        <!-- Numbers -->
+        <Rule color="Numbers">
+            \b0[xX][0-9a-fA-F]+|(\b\d+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?
+        </Rule>
+
+        <!-- JS/TS Keywords -->
+        <Keywords color="Keywords">
+            <Word>const</Word>
+            <Word>let</Word>
+            <Word>var</Word>
+            <Word>function</Word>
+            <Word>class</Word>
+            <Word>import</Word>
+            <Word>export</Word>
+            <Word>from</Word>
+            <Word>default</Word>
+            <Word>return</Word>
+            <Word>if</Word>
+            <Word>else</Word>
+            <Word>for</Word>
+            <Word>while</Word>
+            <Word>do</Word>
+            <Word>switch</Word>
+            <Word>case</Word>
+            <Word>break</Word>
+            <Word>continue</Word>
+            <Word>new</Word>
+            <Word>this</Word>
+            <Word>super</Word>
+            <Word>extends</Word>
+            <Word>async</Word>
+            <Word>await</Word>
+            <Word>yield</Word>
+            <Word>typeof</Word>
+            <Word>instanceof</Word>
+            <Word>try</Word>
+            <Word>catch</Word>
+            <Word>finally</Word>
+            <Word>throw</Word>
+            <Word>in</Word>
+            <Word>of</Word>
+            <Word>null</Word>
+            <Word>undefined</Word>
+            <Word>true</Word>
+            <Word>false</Word>
+            <Word>get</Word>
+            <Word>set</Word>
+            <Word>static</Word>
+            <Word>void</Word>
+            <Word>delete</Word>
+            <Word>with</Word>
+        </Keywords>
+
+        <!-- TS Keywords -->
+        <Keywords color="TypeScriptKeywords">
+            <Word>interface</Word>
+            <Word>type</Word>
+            <Word>enum</Word>
+            <Word>as</Word>
+            <Word>implements</Word>
+            <Word>public</Word>
+            <Word>private</Word>
+            <Word>protected</Word>
+            <Word>readonly</Word>
+            <Word>any</Word>
+            <Word>string</Word>
+            <Word>number</Word>
+            <Word>boolean</Word>
+            <Word>unknown</Word>
+            <Word>never</Word>
+            <Word>keyof</Word>
+            <Word>declare</Word>
+            <Word>namespace</Word>
+            <Word>module</Word>
+        </Keywords>
+
+        <!-- React Hooks and Brand Keywords -->
+        <Keywords color="Hooks">
+            <Word>useState</Word>
+            <Word>useEffect</Word>
+            <Word>useContext</Word>
+            <Word>useReducer</Word>
+            <Word>useCallback</Word>
+            <Word>useMemo</Word>
+            <Word>useRef</Word>
+            <Word>useImperativeHandle</Word>
+            <Word>useLayoutEffect</Word>
+            <Word>useDebugValue</Word>
+            <Word>React</Word>
+            <Word>ReactDOM</Word>
+            <Word>Component</Word>
+            <Word>PureComponent</Word>
+        </Keywords>
+
+        <!-- XML/JSX Tags -->
+        <Rule color="HtmlTag">
+            &lt;/?\s*[a-zA-Z_][a-zA-Z0-9_-]*(?=\s|&gt;|/|$)
+        </Rule>
+        <Rule color="HtmlTag">
+            /?&gt;
+        </Rule>
+
+        <!-- XML/JSX Attributes -->
+        <Rule color="HtmlAttribute">
+            \b[a-zA-Z0-9_-]+(?=\s*=)
+        </Rule>
+    </RuleSet>
+</SyntaxDefinition>

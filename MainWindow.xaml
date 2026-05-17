@@ -1,0 +1,825 @@
+<Window x:Class="smartFinder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:smartFinder"
+        xmlns:vm="clr-namespace:smartFinder.ViewModels"
+        xmlns:conv="clr-namespace:smartFinder.Converters"
+        xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        mc:Ignorable="d"
+        Title="Smart Finder" Height="700" Width="1200"
+        Icon="app_icon.ico"
+        Background="{DynamicResource WindowBg}">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <Style TargetType="TextBox" x:Key="FilterTextBoxStyle">
+            <Setter Property="Background" Value="{DynamicResource PanelBg}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextFg}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4,2"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" CornerRadius="3">
+                                <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                            </Border>
+                            <TextBlock x:Name="watermark" Text="{TemplateBinding Tag}" Foreground="DarkGray" Margin="6,2" IsHitTestVisible="False" VerticalAlignment="Center" Visibility="Collapsed" FontSize="11"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="watermark" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter TargetName="watermark" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource StatusBg}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+
+
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Main Workspace (Row 0) -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" MinWidth="350"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="1*" MinWidth="350"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Half (Column 0): Search Controls & Search Results -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Search Controls (Left Row 0) -->
+                <GroupBox Header="Search Criteria" Grid.Row="0" Margin="0,0,0,10" Padding="10"
+                          Background="{DynamicResource PanelBg}" Foreground="{DynamicResource TextFg}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Directory:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,5,5" Foreground="{DynamicResource TextFg}"/>
+                        <Grid Grid.Row="0" Grid.Column="1" Margin="0,0,15,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding SearchDirectory, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" VerticalContentAlignment="Center"
+                                     Background="{DynamicResource PanelBg}" Foreground="{DynamicResource TextFg}" BorderBrush="{DynamicResource BorderColor}"/>
+                            <Button Content="..." Command="{Binding SelectDirectoryCommand}" Grid.Column="1" Width="30" Margin="5,0,0,0" ToolTip="검색할 폴더를 선택합니다."/>
+                        </Grid>
+
+                        <TextBlock Text="File Pattern:" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="0,0,5,5" Foreground="{DynamicResource TextFg}"/>
+                        <Grid Grid.Row="0" Grid.Column="3" Margin="0,0,15,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding FilePattern, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" VerticalContentAlignment="Center"
+                                     Background="{DynamicResource PanelBg}" Foreground="{DynamicResource TextFg}" BorderBrush="{DynamicResource BorderColor}"
+                                     ToolTip="여러 패턴을 세미콜론(;)으로 구분하여 입력하세요. (예: *.cs; *.txt)"/>
+                            <TextBlock Text="(구분자: ;)" Grid.Column="1" FontSize="11" Foreground="DimGray" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        </Grid>
+
+                        <TextBlock Text="Search Text:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Margin="0,5,5,0" Foreground="{DynamicResource TextFg}"/>
+                        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                                 Grid.Row="1" Grid.Column="1" 
+                                 Margin="0,0,15,0" 
+                                 Height="60" 
+                                 AcceptsReturn="True" 
+                                 TextWrapping="Wrap" 
+                                 VerticalScrollBarVisibility="Auto" 
+                                 AcceptsTab="False"
+                                 Background="{DynamicResource PanelBg}" Foreground="{DynamicResource TextFg}" BorderBrush="{DynamicResource BorderColor}"
+                                 ToolTip="검색할 단어들을 줄바꿈(Enter)으로 구분하여 여러 개 입력할 수 있습니다."/>
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center">
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox Content="AND 연산" IsChecked="{Binding UseAndOperator}" Margin="0,0,0,5" Foreground="{DynamicResource TextFg}" ToolTip="여러 줄의 검색어가 모두 포함된 파일만 매칭합니다. (해제 시 OR 연산)"/>
+                                <CheckBox Content="Subdirectories" IsChecked="{Binding IncludeSubDirectories}" Margin="0,0,0,5" Foreground="{DynamicResource TextFg}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox Content="Regex" IsChecked="{Binding UseRegex}" Margin="0,0,15,0" Foreground="{DynamicResource TextFg}"/>
+                                    <CheckBox Content="Match Case" IsChecked="{Binding MatchCase}" Foreground="{DynamicResource TextFg}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Search & settings controls -->
+                        <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="4" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <Button Content="{Binding IsSearching, Converter={x:Static conv:BoolToStringConverter.Instance}}" 
+                                    Command="{Binding SearchCommand}" 
+                                    Height="45" Width="100" Margin="0,0,0,5"/>
+                            <Button Content="환경설정" Click="SettingsButton_Click" Height="28" Width="100" ToolTip="전용 외부 에디터 등 환경설정을 편집합니다."/>
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+
+                <!-- Tab Utility Bar (Left Row 1) -->
+                <Border Grid.Row="1" Margin="0,0,0,8" Padding="10,5" CornerRadius="4"
+                        Background="{DynamicResource StatusBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0" Content="결과 보관" IsChecked="{Binding KeepResults}" 
+                                  Foreground="{DynamicResource TextFg}" FontWeight="SemiBold"
+                                  VerticalAlignment="Center" ToolTip="체크하면 검색할 때마다 새로운 탭(시트)에 결과를 보관합니다."/>
+                        
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="📤 Excel Down" Command="{Binding ExcelDownCommand}" 
+                                    Width="100" Height="28" Margin="0,0,8,0" FontSize="11" Padding="5,0"
+                                    Cursor="Hand" ToolTip="현재 선택된 탭의 검색 결과를 엑셀(CSV) 파일로 내보냅니다."/>
+                            <Button Content="📥 Excel Upload" Command="{Binding ExcelUploadCommand}" 
+                                    Width="110" Height="28" FontSize="11" Padding="5,0"
+                                    Cursor="Hand" ToolTip="검색 결과 CSV 파일을 업로드하여 그리드에 로드합니다."/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Search Results (Left Row 2) -->
+                <TabControl ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}" Grid.Row="2"
+                            Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Background="Transparent"
+                                        Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=TabControl}}">
+                                <StackPanel.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="시트 삭제" 
+                                                  Command="{Binding PlacementTarget.Tag.DeleteTabCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                  CommandParameter="{Binding}"/>
+                                    </ContextMenu>
+                                </StackPanel.ContextMenu>
+                                <TextBlock Text="{Binding Header}" Margin="0,0,8,0" VerticalAlignment="Center" Foreground="{DynamicResource TextFg}"/>
+                                <Button Content="✕" 
+                                        Command="{Binding DataContext.DeleteTabCommand, RelativeSource={RelativeSource AncestorType=TabControl}}" 
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent" 
+                                        BorderBrush="Transparent"
+                                        Foreground="DimGray" 
+                                        FontSize="10" 
+                                        Padding="2,0" 
+                                        VerticalAlignment="Center"
+                                        Cursor="Hand"
+                                        ToolTip="시트 삭제"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <DockPanel LastChildFill="True">
+
+                                <!-- DataGrid -->
+                                <DataGrid ItemsSource="{Binding ResultsView}" 
+                                          AutoGenerateColumns="False" 
+                                          CanUserAddRows="False" 
+                                          Background="{DynamicResource PanelBg}"
+                                          RowBackground="{DynamicResource PanelBg}"
+                                          AlternatingRowBackground="{DynamicResource AltRowBg}"
+                                          Foreground="{DynamicResource TextFg}"
+                                          BorderBrush="{DynamicResource BorderColor}"
+                                          HeadersVisibility="Column"
+                                          ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                          SelectionChanged="DataGrid_SelectionChanged"
+                                          MouseDoubleClick="DataGrid_MouseDoubleClick">
+                                    <DataGrid.Columns>
+                                        <!-- 1. 검색어 -->
+                                        <DataGridTextColumn Header="검색어" Binding="{Binding MatchedTerms}" IsReadOnly="True" Width="80">
+                                            <DataGridTextColumn.HeaderTemplate>
+                                                <DataTemplate>
+                                                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                                        <ToggleButton x:Name="FilterButton" Grid.Column="1" Width="14" Height="14" Margin="4,0,0,0" Background="Transparent" BorderBrush="Transparent" IsChecked="{Binding DataContext.IsMatchedTermsFilterOpen, RelativeSource={RelativeSource AncestorType=DataGrid}, Mode=TwoWay}" Cursor="Hand">
+                                                            <ToggleButton.Template>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Grid Background="Transparent">
+                                                                        <Path Data="M2,2 L12,2 L8,7 L8,12 L6,12 L6,7 Z" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                            <Path.Style>
+                                                                                <Style TargetType="Path">
+                                                                                    <Setter Property="Fill" Value="DarkGray"/>
+                                                                                    <Setter Property="Stroke" Value="DarkGray"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding DataContext.IsMatchedTermsFiltered, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="True">
+                                                                                            <Setter Property="Fill" Value="#000CB5"/>
+                                                                                            <Setter Property="Stroke" Value="#000CB5"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Path.Style>
+                                                                        </Path>
+                                                                    </Grid>
+                                                                </ControlTemplate>
+                                                            </ToggleButton.Template>
+                                                        </ToggleButton>
+                                                        <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
+                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
+                                                                </Border.Effect>
+                                                                <Grid>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="*"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+                                                                    <TextBox Grid.Row="0" Text="{Binding DataContext.MatchedTermsSearchText, RelativeSource={RelativeSource AncestorType=DataGrid}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FilterTextBoxStyle}" Tag="검색..." Margin="0,0,0,4"/>
+                                                                    <Button Grid.Row="1" Content="☑ 모두 선택 / 해제" Command="{Binding DataContext.ToggleSelectAllCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="MatchedTerms" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" Foreground="#000CB5" Cursor="Hand" FontSize="10" Margin="4,2,4,4"/>
+                                                                    <ListBox Grid.Row="2" ItemsSource="{Binding DataContext.MatchedTermsFilterItemsView, RelativeSource={RelativeSource AncestorType=DataGrid}}" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                                        <ListBox.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" Content="{Binding DisplayText}" Foreground="{DynamicResource TextFg}" Margin="0,1"/>
+                                                                            </DataTemplate>
+                                                                        </ListBox.ItemTemplate>
+                                                                    </ListBox>
+                                                                    <Grid Grid.Row="3" Margin="0,6,0,0">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Button Grid.Column="0" Content="확인" Command="{Binding DataContext.ApplyColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="MatchedTerms" Margin="0,0,2,0" Height="22" FontSize="10" Padding="0"/>
+                                                                        <Button Grid.Column="1" Content="지우기" Command="{Binding DataContext.ClearColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="MatchedTerms" Margin="2,0,0,0" Height="22" FontSize="10" Padding="0"/>
+                                                                    </Grid>
+                                                                    <Thumb Grid.Row="3" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="PopupResizeThumb_DragDelta" Margin="0,0,-2,-2">
+                                                                        <Thumb.Template>
+                                                                            <ControlTemplate TargetType="Thumb">
+                                                                                <Grid Background="Transparent">
+                                                                                    <Path Data="M 10 2 L 2 10 M 10 5 L 5 10 M 10 8 L 8 10" Stroke="{DynamicResource TextFg}" StrokeThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity="0.45"/>
+                                                                                </Grid>
+                                                                            </ControlTemplate>
+                                                                        </Thumb.Template>
+                                                                    </Thumb>
+                                                                </Grid>
+                                                            </Border>
+                                                        </Popup>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTextColumn.HeaderTemplate>
+                                        </DataGridTextColumn>
+
+                                        <!-- 2. Path -->
+                                        <DataGridTextColumn Header="Path" Binding="{Binding Directory}" IsReadOnly="True" Width="60">
+                                            <DataGridTextColumn.HeaderTemplate>
+                                                <DataTemplate>
+                                                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                                        <ToggleButton x:Name="FilterButton" Grid.Column="1" Width="14" Height="14" Margin="4,0,0,0" Background="Transparent" BorderBrush="Transparent" IsChecked="{Binding DataContext.IsDirectoryFilterOpen, RelativeSource={RelativeSource AncestorType=DataGrid}, Mode=TwoWay}" Cursor="Hand">
+                                                            <ToggleButton.Template>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Grid Background="Transparent">
+                                                                        <Path Data="M2,2 L12,2 L8,7 L8,12 L6,12 L6,7 Z" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                            <Path.Style>
+                                                                                <Style TargetType="Path">
+                                                                                    <Setter Property="Fill" Value="DarkGray"/>
+                                                                                    <Setter Property="Stroke" Value="DarkGray"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding DataContext.IsDirectoryFiltered, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="True">
+                                                                                            <Setter Property="Fill" Value="#000CB5"/>
+                                                                                            <Setter Property="Stroke" Value="#000CB5"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Path.Style>
+                                                                        </Path>
+                                                                    </Grid>
+                                                                </ControlTemplate>
+                                                            </ToggleButton.Template>
+                                                        </ToggleButton>
+                                                        <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
+                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
+                                                                </Border.Effect>
+                                                                <Grid>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="*"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+                                                                    <TextBox Grid.Row="0" Text="{Binding DataContext.DirectorySearchText, RelativeSource={RelativeSource AncestorType=DataGrid}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FilterTextBoxStyle}" Tag="검색..." Margin="0,0,0,4"/>
+                                                                    <Button Grid.Row="1" Content="☑ 모두 선택 / 해제" Command="{Binding DataContext.ToggleSelectAllCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="Directory" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" Foreground="#000CB5" Cursor="Hand" FontSize="10" Margin="4,2,4,4"/>
+                                                                    <ListBox Grid.Row="2" ItemsSource="{Binding DataContext.DirectoryFilterItemsView, RelativeSource={RelativeSource AncestorType=DataGrid}}" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                                        <ListBox.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" Content="{Binding DisplayText}" Foreground="{DynamicResource TextFg}" Margin="0,1"/>
+                                                                            </DataTemplate>
+                                                                        </ListBox.ItemTemplate>
+                                                                    </ListBox>
+                                                                    <Grid Grid.Row="3" Margin="0,6,0,0">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Button Grid.Column="0" Content="확인" Command="{Binding DataContext.ApplyColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="Directory" Margin="0,0,2,0" Height="22" FontSize="10" Padding="0"/>
+                                                                        <Button Grid.Column="1" Content="지우기" Command="{Binding DataContext.ClearColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="Directory" Margin="2,0,0,0" Height="22" FontSize="10" Padding="0"/>
+                                                                    </Grid>
+                                                                    <Thumb Grid.Row="3" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="PopupResizeThumb_DragDelta" Margin="0,0,-2,-2">
+                                                                        <Thumb.Template>
+                                                                            <ControlTemplate TargetType="Thumb">
+                                                                                <Grid Background="Transparent">
+                                                                                    <Path Data="M 10 2 L 2 10 M 10 5 L 5 10 M 10 8 L 8 10" Stroke="{DynamicResource TextFg}" StrokeThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity="0.45"/>
+                                                                                </Grid>
+                                                                            </ControlTemplate>
+                                                                        </Thumb.Template>
+                                                                    </Thumb>
+                                                                </Grid>
+                                                            </Border>
+                                                        </Popup>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTextColumn.HeaderTemplate>
+                                        </DataGridTextColumn>
+
+                                        <!-- 3. File Name -->
+                                        <DataGridTextColumn Header="File Name" Binding="{Binding FileName}" IsReadOnly="True" Width="130">
+                                            <DataGridTextColumn.HeaderTemplate>
+                                                <DataTemplate>
+                                                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                                        <ToggleButton x:Name="FilterButton" Grid.Column="1" Width="14" Height="14" Margin="4,0,0,0" Background="Transparent" BorderBrush="Transparent" IsChecked="{Binding DataContext.IsFileNameFilterOpen, RelativeSource={RelativeSource AncestorType=DataGrid}, Mode=TwoWay}" Cursor="Hand">
+                                                            <ToggleButton.Template>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Grid Background="Transparent">
+                                                                        <Path Data="M2,2 L12,2 L8,7 L8,12 L6,12 L6,7 Z" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                            <Path.Style>
+                                                                                <Style TargetType="Path">
+                                                                                    <Setter Property="Fill" Value="DarkGray"/>
+                                                                                    <Setter Property="Stroke" Value="DarkGray"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding DataContext.IsFileNameFiltered, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="True">
+                                                                                            <Setter Property="Fill" Value="#000CB5"/>
+                                                                                            <Setter Property="Stroke" Value="#000CB5"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Path.Style>
+                                                                        </Path>
+                                                                    </Grid>
+                                                                </ControlTemplate>
+                                                            </ToggleButton.Template>
+                                                        </ToggleButton>
+                                                        <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
+                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
+                                                                </Border.Effect>
+                                                                <Grid>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="*"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+                                                                    <TextBox Grid.Row="0" Text="{Binding DataContext.FileNameSearchText, RelativeSource={RelativeSource AncestorType=DataGrid}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FilterTextBoxStyle}" Tag="검색..." Margin="0,0,0,4"/>
+                                                                    <Button Grid.Row="1" Content="☑ 모두 선택 / 해제" Command="{Binding DataContext.ToggleSelectAllCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="FileName" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" Foreground="#000CB5" Cursor="Hand" FontSize="10" Margin="4,2,4,4"/>
+                                                                    <ListBox Grid.Row="2" ItemsSource="{Binding DataContext.FileNameFilterItemsView, RelativeSource={RelativeSource AncestorType=DataGrid}}" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                                        <ListBox.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" Content="{Binding DisplayText}" Foreground="{DynamicResource TextFg}" Margin="0,1"/>
+                                                                            </DataTemplate>
+                                                                        </ListBox.ItemTemplate>
+                                                                    </ListBox>
+                                                                    <Grid Grid.Row="3" Margin="0,6,0,0">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Button Grid.Column="0" Content="확인" Command="{Binding DataContext.ApplyColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="FileName" Margin="0,0,2,0" Height="22" FontSize="10" Padding="0"/>
+                                                                        <Button Grid.Column="1" Content="지우기" Command="{Binding DataContext.ClearColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="FileName" Margin="2,0,0,0" Height="22" FontSize="10" Padding="0"/>
+                                                                    </Grid>
+                                                                    <Thumb Grid.Row="3" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="PopupResizeThumb_DragDelta" Margin="0,0,-2,-2">
+                                                                        <Thumb.Template>
+                                                                            <ControlTemplate TargetType="Thumb">
+                                                                                <Grid Background="Transparent">
+                                                                                    <Path Data="M 10 2 L 2 10 M 10 5 L 5 10 M 10 8 L 8 10" Stroke="{DynamicResource TextFg}" StrokeThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity="0.45"/>
+                                                                                </Grid>
+                                                                            </ControlTemplate>
+                                                                        </Thumb.Template>
+                                                                    </Thumb>
+                                                                </Grid>
+                                                            </Border>
+                                                        </Popup>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTextColumn.HeaderTemplate>
+                                        </DataGridTextColumn>
+
+                                        <!-- 4. Ext -->
+                                        <DataGridTextColumn Header="Ext" Binding="{Binding Extension}" IsReadOnly="True" Width="40">
+                                            <DataGridTextColumn.HeaderTemplate>
+                                                <DataTemplate>
+                                                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                                        <ToggleButton x:Name="FilterButton" Grid.Column="1" Width="14" Height="14" Margin="4,0,0,0" Background="Transparent" BorderBrush="Transparent" IsChecked="{Binding DataContext.IsExtensionFilterOpen, RelativeSource={RelativeSource AncestorType=DataGrid}, Mode=TwoWay}" Cursor="Hand">
+                                                            <ToggleButton.Template>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Grid Background="Transparent">
+                                                                        <Path Data="M2,2 L12,2 L8,7 L8,12 L6,12 L6,7 Z" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                            <Path.Style>
+                                                                                <Style TargetType="Path">
+                                                                                    <Setter Property="Fill" Value="DarkGray"/>
+                                                                                    <Setter Property="Stroke" Value="DarkGray"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding DataContext.IsExtensionFiltered, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="True">
+                                                                                            <Setter Property="Fill" Value="#000CB5"/>
+                                                                                            <Setter Property="Stroke" Value="#000CB5"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Path.Style>
+                                                                        </Path>
+                                                                    </Grid>
+                                                                </ControlTemplate>
+                                                            </ToggleButton.Template>
+                                                        </ToggleButton>
+                                                        <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
+                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
+                                                                </Border.Effect>
+                                                                <Grid>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="*"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+                                                                    <TextBox Grid.Row="0" Text="{Binding DataContext.ExtensionSearchText, RelativeSource={RelativeSource AncestorType=DataGrid}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FilterTextBoxStyle}" Tag="검색..." Margin="0,0,0,4"/>
+                                                                    <Button Grid.Row="1" Content="☑ 모두 선택 / 해제" Command="{Binding DataContext.ToggleSelectAllCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="Extension" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" Foreground="#000CB5" Cursor="Hand" FontSize="10" Margin="4,2,4,4"/>
+                                                                    <ListBox Grid.Row="2" ItemsSource="{Binding DataContext.ExtensionFilterItemsView, RelativeSource={RelativeSource AncestorType=DataGrid}}" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                                        <ListBox.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" Content="{Binding DisplayText}" Foreground="{DynamicResource TextFg}" Margin="0,1"/>
+                                                                            </DataTemplate>
+                                                                        </ListBox.ItemTemplate>
+                                                                    </ListBox>
+                                                                    <Grid Grid.Row="3" Margin="0,6,0,0">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Button Grid.Column="0" Content="확인" Command="{Binding DataContext.ApplyColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="Extension" Margin="0,0,2,0" Height="22" FontSize="10" Padding="0"/>
+                                                                        <Button Grid.Column="1" Content="지우기" Command="{Binding DataContext.ClearColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="Extension" Margin="2,0,0,0" Height="22" FontSize="10" Padding="0"/>
+                                                                    </Grid>
+                                                                    <Thumb Grid.Row="3" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="PopupResizeThumb_DragDelta" Margin="0,0,-2,-2">
+                                                                        <Thumb.Template>
+                                                                            <ControlTemplate TargetType="Thumb">
+                                                                                <Grid Background="Transparent">
+                                                                                    <Path Data="M 10 2 L 2 10 M 10 5 L 5 10 M 10 8 L 8 10" Stroke="{DynamicResource TextFg}" StrokeThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity="0.45"/>
+                                                                                </Grid>
+                                                                            </ControlTemplate>
+                                                                        </Thumb.Template>
+                                                                    </Thumb>
+                                                                </Grid>
+                                                            </Border>
+                                                        </Popup>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTextColumn.HeaderTemplate>
+                                        </DataGridTextColumn>
+
+                                        <!-- 5. Line -->
+                                        <DataGridTextColumn Header="Line" Binding="{Binding LineNo}" IsReadOnly="True" Width="60">
+                                            <DataGridTextColumn.HeaderTemplate>
+                                                <DataTemplate>
+                                                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                                        <ToggleButton x:Name="FilterButton" Grid.Column="1" Width="14" Height="14" Margin="4,0,0,0" Background="Transparent" BorderBrush="Transparent" IsChecked="{Binding DataContext.IsLineNoFilterOpen, RelativeSource={RelativeSource AncestorType=DataGrid}, Mode=TwoWay}" Cursor="Hand">
+                                                            <ToggleButton.Template>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Grid Background="Transparent">
+                                                                        <Path Data="M2,2 L12,2 L8,7 L8,12 L6,12 L6,7 Z" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                            <Path.Style>
+                                                                                <Style TargetType="Path">
+                                                                                    <Setter Property="Fill" Value="DarkGray"/>
+                                                                                    <Setter Property="Stroke" Value="DarkGray"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding DataContext.IsLineNoFiltered, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="True">
+                                                                                            <Setter Property="Fill" Value="#000CB5"/>
+                                                                                            <Setter Property="Stroke" Value="#000CB5"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Path.Style>
+                                                                        </Path>
+                                                                    </Grid>
+                                                                </ControlTemplate>
+                                                            </ToggleButton.Template>
+                                                        </ToggleButton>
+                                                        <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
+                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
+                                                                </Border.Effect>
+                                                                <Grid>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="*"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+                                                                    <TextBox Grid.Row="0" Text="{Binding DataContext.LineNoSearchText, RelativeSource={RelativeSource AncestorType=DataGrid}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FilterTextBoxStyle}" Tag="검색..." Margin="0,0,0,4"/>
+                                                                    <Button Grid.Row="1" Content="☑ 모두 선택 / 해제" Command="{Binding DataContext.ToggleSelectAllCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="LineNo" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" Foreground="#000CB5" Cursor="Hand" FontSize="10" Margin="4,2,4,4"/>
+                                                                    <ListBox Grid.Row="2" ItemsSource="{Binding DataContext.LineNoFilterItemsView, RelativeSource={RelativeSource AncestorType=DataGrid}}" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                                        <ListBox.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" Content="{Binding DisplayText}" Foreground="{DynamicResource TextFg}" Margin="0,1"/>
+                                                                            </DataTemplate>
+                                                                        </ListBox.ItemTemplate>
+                                                                    </ListBox>
+                                                                    <Grid Grid.Row="3" Margin="0,6,0,0">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Button Grid.Column="0" Content="확인" Command="{Binding DataContext.ApplyColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="LineNo" Margin="0,0,2,0" Height="22" FontSize="10" Padding="0"/>
+                                                                        <Button Grid.Column="1" Content="지우기" Command="{Binding DataContext.ClearColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="LineNo" Margin="2,0,0,0" Height="22" FontSize="10" Padding="0"/>
+                                                                    </Grid>
+                                                                    <Thumb Grid.Row="3" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="PopupResizeThumb_DragDelta" Margin="0,0,-2,-2">
+                                                                        <Thumb.Template>
+                                                                            <ControlTemplate TargetType="Thumb">
+                                                                                <Grid Background="Transparent">
+                                                                                    <Path Data="M 10 2 L 2 10 M 10 5 L 5 10 M 10 8 L 8 10" Stroke="{DynamicResource TextFg}" StrokeThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity="0.45"/>
+                                                                                </Grid>
+                                                                            </ControlTemplate>
+                                                                        </Thumb.Template>
+                                                                    </Thumb>
+                                                                </Grid>
+                                                            </Border>
+                                                        </Popup>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTextColumn.HeaderTemplate>
+                                        </DataGridTextColumn>
+
+                                        <!-- 6. Line Text -->
+                                        <DataGridTextColumn Header="Line Text" Binding="{Binding LineText}" IsReadOnly="True" Width="*">
+                                            <DataGridTextColumn.HeaderTemplate>
+                                                <DataTemplate>
+                                                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                                        <ToggleButton x:Name="FilterButton" Grid.Column="1" Width="14" Height="14" Margin="4,0,0,0" Background="Transparent" BorderBrush="Transparent" IsChecked="{Binding DataContext.IsLineTextFilterOpen, RelativeSource={RelativeSource AncestorType=DataGrid}, Mode=TwoWay}" Cursor="Hand">
+                                                            <ToggleButton.Template>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Grid Background="Transparent">
+                                                                        <Path Data="M2,2 L12,2 L8,7 L8,12 L6,12 L6,7 Z" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                            <Path.Style>
+                                                                                <Style TargetType="Path">
+                                                                                    <Setter Property="Fill" Value="DarkGray"/>
+                                                                                    <Setter Property="Stroke" Value="DarkGray"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding DataContext.IsLineTextFiltered, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="True">
+                                                                                            <Setter Property="Fill" Value="#000CB5"/>
+                                                                                            <Setter Property="Stroke" Value="#000CB5"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Path.Style>
+                                                                        </Path>
+                                                                    </Grid>
+                                                                </ControlTemplate>
+                                                            </ToggleButton.Template>
+                                                        </ToggleButton>
+                                                        <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
+                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
+                                                                </Border.Effect>
+                                                                <Grid>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="*"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+                                                                    <TextBox Grid.Row="0" Text="{Binding DataContext.LineTextSearchText, RelativeSource={RelativeSource AncestorType=DataGrid}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FilterTextBoxStyle}" Tag="검색..." Margin="0,0,0,4"/>
+                                                                    <Button Grid.Row="1" Content="☑ 모두 선택 / 해제" Command="{Binding DataContext.ToggleSelectAllCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="LineText" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" Foreground="#000CB5" Cursor="Hand" FontSize="10" Margin="4,2,4,4"/>
+                                                                    <ListBox Grid.Row="2" ItemsSource="{Binding DataContext.LineTextFilterItemsView, RelativeSource={RelativeSource AncestorType=DataGrid}}" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                                        <ListBox.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" Content="{Binding DisplayText}" Foreground="{DynamicResource TextFg}" Margin="0,1"/>
+                                                                            </DataTemplate>
+                                                                        </ListBox.ItemTemplate>
+                                                                    </ListBox>
+                                                                    <Grid Grid.Row="3" Margin="0,6,0,0">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Button Grid.Column="0" Content="확인" Command="{Binding DataContext.ApplyColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="LineText" Margin="0,0,2,0" Height="22" FontSize="10" Padding="0"/>
+                                                                        <Button Grid.Column="1" Content="지우기" Command="{Binding DataContext.ClearColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="LineText" Margin="2,0,0,0" Height="22" FontSize="10" Padding="0"/>
+                                                                    </Grid>
+                                                                    <Thumb Grid.Row="3" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="PopupResizeThumb_DragDelta" Margin="0,0,-2,-2">
+                                                                        <Thumb.Template>
+                                                                            <ControlTemplate TargetType="Thumb">
+                                                                                <Grid Background="Transparent">
+                                                                                    <Path Data="M 10 2 L 2 10 M 10 5 L 5 10 M 10 8 L 8 10" Stroke="{DynamicResource TextFg}" StrokeThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity="0.45"/>
+                                                                                </Grid>
+                                                                            </ControlTemplate>
+                                                                        </Thumb.Template>
+                                                                    </Thumb>
+                                                                </Grid>
+                                                            </Border>
+                                                        </Popup>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTextColumn.HeaderTemplate>
+                                        </DataGridTextColumn>
+
+                                        <!-- 7. Note -->
+                                        <DataGridTextColumn Header="Note" Binding="{Binding Note, UpdateSourceTrigger=PropertyChanged}" Width="100">
+                                            <DataGridTextColumn.HeaderTemplate>
+                                                <DataTemplate>
+                                                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                                        <ToggleButton x:Name="FilterButton" Grid.Column="1" Width="14" Height="14" Margin="4,0,0,0" Background="Transparent" BorderBrush="Transparent" IsChecked="{Binding DataContext.IsNoteFilterOpen, RelativeSource={RelativeSource AncestorType=DataGrid}, Mode=TwoWay}" Cursor="Hand">
+                                                            <ToggleButton.Template>
+                                                                <ControlTemplate TargetType="ToggleButton">
+                                                                    <Grid Background="Transparent">
+                                                                        <Path Data="M2,2 L12,2 L8,7 L8,12 L6,12 L6,7 Z" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                            <Path.Style>
+                                                                                <Style TargetType="Path">
+                                                                                    <Setter Property="Fill" Value="DarkGray"/>
+                                                                                    <Setter Property="Stroke" Value="DarkGray"/>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding DataContext.IsNoteFiltered, RelativeSource={RelativeSource AncestorType=DataGrid}}" Value="True">
+                                                                                            <Setter Property="Fill" Value="#000CB5"/>
+                                                                                            <Setter Property="Stroke" Value="#000CB5"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Path.Style>
+                                                                        </Path>
+                                                                    </Grid>
+                                                                </ControlTemplate>
+                                                            </ToggleButton.Template>
+                                                        </ToggleButton>
+                                                        <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
+                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                                <Border.Effect>
+                                                                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
+                                                                </Border.Effect>
+                                                                <Grid>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="*"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+                                                                    <TextBox Grid.Row="0" Text="{Binding DataContext.NoteSearchText, RelativeSource={RelativeSource AncestorType=DataGrid}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FilterTextBoxStyle}" Tag="검색..." Margin="0,0,0,4"/>
+                                                                    <Button Grid.Row="1" Content="☑ 모두 선택 / 해제" Command="{Binding DataContext.ToggleSelectAllCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="Note" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" Foreground="#000CB5" Cursor="Hand" FontSize="10" Margin="4,2,4,4"/>
+                                                                    <ListBox Grid.Row="2" ItemsSource="{Binding DataContext.NoteFilterItemsView, RelativeSource={RelativeSource AncestorType=DataGrid}}" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                                                        <ListBox.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" Content="{Binding DisplayText}" Foreground="{DynamicResource TextFg}" Margin="0,1"/>
+                                                                            </DataTemplate>
+                                                                        </ListBox.ItemTemplate>
+                                                                    </ListBox>
+                                                                    <Grid Grid.Row="3" Margin="0,6,0,0">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Button Grid.Column="0" Content="확인" Command="{Binding DataContext.ApplyColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="Note" Margin="0,0,2,0" Height="22" FontSize="10" Padding="0"/>
+                                                                        <Button Grid.Column="1" Content="지우기" Command="{Binding DataContext.ClearColumnFilterCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="Note" Margin="2,0,0,0" Height="22" FontSize="10" Padding="0"/>
+                                                                    </Grid>
+                                                                    <Thumb Grid.Row="3" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="PopupResizeThumb_DragDelta" Margin="0,0,-2,-2">
+                                                                        <Thumb.Template>
+                                                                            <ControlTemplate TargetType="Thumb">
+                                                                                <Grid Background="Transparent">
+                                                                                    <Path Data="M 10 2 L 2 10 M 10 5 L 5 10 M 10 8 L 8 10" Stroke="{DynamicResource TextFg}" StrokeThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Opacity="0.45"/>
+                                                                                </Grid>
+                                                                            </ControlTemplate>
+                                                                        </Thumb.Template>
+                                                                    </Thumb>
+                                                                </Grid>
+                                                            </Border>
+                                                        </Popup>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTextColumn.HeaderTemplate>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DockPanel>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
+            </Grid>
+
+            <!-- Splitter -->
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="{DynamicResource BorderColor}" Width="5" ShowsPreview="True"/>
+
+            <!-- Right Half (Column 2): File Details Preview -->
+            <GroupBox Header="파일 상세보기" Grid.Column="2" Padding="5" Margin="10,0,0,0"
+                      Background="{DynamicResource PanelBg}" Foreground="{DynamicResource TextFg}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- File Path and Copy Button Bar -->
+                    <Border Grid.Row="0" Margin="0,0,0,8" Padding="5" CornerRadius="4"
+                            Background="{DynamicResource StatusBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="filePathTextBox" Grid.Column="0" IsReadOnly="True" 
+                                     Background="Transparent" BorderThickness="0" 
+                                     VerticalAlignment="Center" Margin="5,0,10,0"
+                                     Foreground="{DynamicResource TextFg}" FontWeight="SemiBold"
+                                     Text="선택된 파일 없음" TextWrapping="NoWrap"/>
+                            <Button Grid.Column="1" Content="📋 복사" Click="CopyPathButton_Click" 
+                                    Width="60" Height="24" FontSize="11" Padding="2,0"
+                                    Cursor="Hand" ToolTip="전체 경로를 클립보드에 복사합니다."/>
+                        </Grid>
+                    </Border>
+
+                    <avalonEdit:TextEditor x:Name="textEditor" 
+                                           Grid.Row="1"
+                                           IsReadOnly="True" 
+                                           ShowLineNumbers="True" 
+                                           FontFamily="Consolas" 
+                                           FontSize="12" 
+                                           Background="{DynamicResource PanelBg}" 
+                                           Foreground="{DynamicResource TextFg}" 
+                                           BorderBrush="{DynamicResource BorderColor}" 
+                                           BorderThickness="1"/>
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="1" Margin="0,5,0,0" Background="{DynamicResource StatusBg}" Foreground="{DynamicResource TextFg}">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource TextFg}"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
