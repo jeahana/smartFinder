@@ -89,3 +89,4 @@ build.bat
 * [Models/SearchTab.cs](file:///c:/workproject/smartFinder/Models/SearchTab.cs): 엑셀식 열 필터링 엔진, ListBox 고유 값 바인딩 및 컬렉션 필터링 뷰 콜백 로직
 * [Services/FileSearchService.cs](file:///c:/workproject/smartFinder/Services/FileSearchService.cs): 멀티스레드 기반 디렉토리 비동기식 고성능 검색 파이프라인
 * [React-Mode.xshd](file:///c:/workproject/smartFinder/React-Mode.xshd): 프론트엔드 최신 구문 하이라이팅을 위한 커스텀 XML 하이라이팅 리소스 스키마
+
