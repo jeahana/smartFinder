@@ -18,6 +18,8 @@
   <ItemGroup>
     <Resource Include="app_icon.png" />
     <Resource Include="app_icon.ico" />
+    <Resource Include="window_icon.png" />
+    <Resource Include="window_icon.ico" />
     <Resource Include="React-Mode.xshd" />
   </ItemGroup>
 

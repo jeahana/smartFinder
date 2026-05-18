@@ -9,7 +9,7 @@
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d"
         Title="Smart Finder" Height="700" Width="1200"
-        Icon="app_icon.ico"
+        Icon="window_icon.ico"
         Background="{DynamicResource WindowBg}">
     <Window.DataContext>
         <vm:MainViewModel/>

@@ -4,7 +4,7 @@
         Title="환경설정" Height="315" Width="650"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Icon="app_icon.ico"
+        Icon="window_icon.ico"
         Background="{DynamicResource WindowBg}"
         Foreground="{DynamicResource TextFg}"
         ShowInTaskbar="False">
