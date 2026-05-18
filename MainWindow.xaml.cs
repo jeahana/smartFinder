@@ -125,45 +125,6 @@ public partial class MainWindow : Window
                     currentLineBg = Color.FromArgb(40, 255, 255, 255);
                     break;
 
-                case "Nord Dark":
-                    windowBg = Color.FromRgb(46, 52, 64);
-                    panelBg = Color.FromRgb(59, 66, 82);
-                    textFg = Color.FromRgb(216, 222, 233);
-                    borderBrush = Color.FromRgb(76, 86, 106);
-                    altRowBg = Color.FromRgb(53, 60, 74);
-                    statusBg = Color.FromRgb(36, 41, 51);
-                    editorBg = Color.FromRgb(59, 66, 82);
-                    editorFg = Color.FromRgb(229, 233, 240);
-                    lineNumbersFg = Color.FromRgb(108, 121, 148);
-                    currentLineBg = Color.FromArgb(40, 255, 255, 255);
-                    break;
-
-                case "Midnight Black":
-                    windowBg = Color.FromRgb(0, 0, 0);
-                    panelBg = Color.FromRgb(13, 13, 13);
-                    textFg = Color.FromRgb(236, 239, 241);
-                    borderBrush = Color.FromRgb(26, 26, 26);
-                    altRowBg = Color.FromRgb(5, 5, 5);
-                    statusBg = Color.FromRgb(11, 11, 11);
-                    editorBg = Color.FromRgb(13, 13, 13);
-                    editorFg = Color.FromRgb(207, 216, 220);
-                    lineNumbersFg = Color.FromRgb(72, 85, 90);
-                    currentLineBg = Color.FromArgb(30, 255, 255, 255);
-                    break;
-
-                case "Deep Black":
-                    windowBg = Color.FromRgb(10, 10, 12);
-                    panelBg = Color.FromRgb(16, 16, 20);
-                    textFg = Color.FromRgb(234, 234, 230);
-                    borderBrush = Color.FromRgb(34, 34, 40);
-                    altRowBg = Color.FromRgb(14, 14, 18);
-                    statusBg = Color.FromRgb(20, 20, 26);
-                    editorBg = Color.FromRgb(16, 16, 20);
-                    editorFg = Color.FromRgb(224, 224, 230);
-                    lineNumbersFg = Color.FromRgb(92, 92, 106);
-                    currentLineBg = Color.FromArgb(40, 255, 255, 255);
-                    break;
-
                 case "Monokai":
                     windowBg = Color.FromRgb(30, 31, 28);
                     panelBg = Color.FromRgb(39, 40, 34);
@@ -187,19 +148,6 @@ public partial class MainWindow : Window
                     editorBg = Color.FromRgb(41, 49, 52);
                     editorFg = Color.FromRgb(224, 226, 228);
                     lineNumbersFg = Color.FromRgb(102, 116, 123);
-                    currentLineBg = Color.FromArgb(40, 255, 255, 255);
-                    break;
-
-                case "Solarized Dark":
-                    windowBg = Color.FromRgb(0, 33, 43);
-                    panelBg = Color.FromRgb(0, 43, 54);
-                    textFg = Color.FromRgb(147, 161, 161);
-                    borderBrush = Color.FromRgb(7, 54, 66);
-                    altRowBg = Color.FromRgb(0, 38, 48);
-                    statusBg = Color.FromRgb(0, 27, 36);
-                    editorBg = Color.FromRgb(0, 43, 54);
-                    editorFg = Color.FromRgb(147, 161, 161);
-                    lineNumbersFg = Color.FromRgb(88, 110, 117);
                     currentLineBg = Color.FromArgb(40, 255, 255, 255);
                     break;
 
@@ -229,19 +177,6 @@ public partial class MainWindow : Window
                     currentLineBg = Color.FromArgb(30, 255, 255, 255);
                     break;
 
-                case "Zenburn":
-                    windowBg = Color.FromRgb(53, 53, 53);
-                    panelBg = Color.FromRgb(63, 63, 63);
-                    textFg = Color.FromRgb(220, 220, 204);
-                    borderBrush = Color.FromRgb(80, 80, 80);
-                    altRowBg = Color.FromRgb(58, 58, 58);
-                    statusBg = Color.FromRgb(45, 45, 45);
-                    editorBg = Color.FromRgb(63, 63, 63);
-                    editorFg = Color.FromRgb(220, 220, 204);
-                    lineNumbersFg = Color.FromRgb(143, 143, 143);
-                    currentLineBg = Color.FromArgb(30, 255, 255, 255);
-                    break;
-
                 case "Choco":
                     windowBg = Color.FromRgb(21, 12, 9);
                     panelBg = Color.FromRgb(26, 15, 11);
@@ -252,19 +187,6 @@ public partial class MainWindow : Window
                     editorBg = Color.FromRgb(26, 15, 11);
                     editorFg = Color.FromRgb(195, 190, 152);
                     lineNumbersFg = Color.FromRgb(130, 115, 95);
-                    currentLineBg = Color.FromArgb(30, 255, 255, 255);
-                    break;
-
-                case "Bespin":
-                    windowBg = Color.FromRgb(34, 27, 23);
-                    panelBg = Color.FromRgb(42, 33, 28);
-                    textFg = Color.FromRgb(189, 175, 157);
-                    borderBrush = Color.FromRgb(65, 52, 44);
-                    altRowBg = Color.FromRgb(38, 30, 25);
-                    statusBg = Color.FromRgb(25, 20, 17);
-                    editorBg = Color.FromRgb(42, 33, 28);
-                    editorFg = Color.FromRgb(189, 175, 157);
-                    lineNumbersFg = Color.FromRgb(137, 120, 105);
                     currentLineBg = Color.FromArgb(30, 255, 255, 255);
                     break;
 
@@ -298,71 +220,6 @@ public partial class MainWindow : Window
                     editorFg = Color.FromRgb(7, 18, 54);
                     lineNumbersFg = Color.FromRgb(100, 106, 195); // Periwinkle-aligned line numbers (#646ac3)
                     currentLineBg = Color.FromRgb(242, 243, 255);
-                    break;
-
-                case "Warm Sepia":
-                    windowBg = Color.FromRgb(244, 236, 216);
-                    panelBg = Color.FromRgb(250, 246, 235);
-                    textFg = Color.FromRgb(79, 62, 46);
-                    borderBrush = Color.FromRgb(214, 197, 179);
-                    altRowBg = Color.FromRgb(245, 238, 220);
-                    statusBg = Color.FromRgb(234, 223, 201);
-                    editorBg = Color.FromRgb(250, 246, 235);
-                    editorFg = Color.FromRgb(79, 62, 46);
-                    lineNumbersFg = Color.FromRgb(165, 148, 130);
-                    currentLineBg = Color.FromRgb(236, 226, 198);
-                    break;
-
-                case "Ice Blue":
-                    windowBg = Color.FromRgb(235, 242, 247);
-                    panelBg = Color.FromRgb(245, 248, 250);
-                    textFg = Color.FromRgb(26, 54, 93);
-                    borderBrush = Color.FromRgb(188, 208, 224);
-                    altRowBg = Color.FromRgb(235, 242, 247);
-                    statusBg = Color.FromRgb(209, 225, 236);
-                    editorBg = Color.FromRgb(245, 248, 250);
-                    editorFg = Color.FromRgb(26, 54, 93);
-                    lineNumbersFg = Color.FromRgb(130, 150, 170);
-                    currentLineBg = Color.FromRgb(219, 233, 244);
-                    break;
-
-                case "Solarized Light":
-                    windowBg = Color.FromRgb(238, 232, 213);
-                    panelBg = Color.FromRgb(253, 246, 227);
-                    textFg = Color.FromRgb(101, 123, 131);
-                    borderBrush = Color.FromRgb(207, 196, 171);
-                    altRowBg = Color.FromRgb(245, 237, 216);
-                    statusBg = Color.FromRgb(224, 217, 197);
-                    editorBg = Color.FromRgb(253, 246, 227);
-                    editorFg = Color.FromRgb(101, 123, 131);
-                    lineNumbersFg = Color.FromRgb(147, 161, 161);
-                    currentLineBg = Color.FromRgb(238, 232, 213);
-                    break;
-
-                case "Hello Kitty":
-                    windowBg = Color.FromRgb(255, 215, 255);
-                    panelBg = Color.FromRgb(255, 240, 255);
-                    textFg = Color.FromRgb(70, 0, 70);
-                    borderBrush = Color.FromRgb(255, 176, 255);
-                    altRowBg = Color.FromRgb(255, 225, 255);
-                    statusBg = Color.FromRgb(255, 190, 255);
-                    editorBg = Color.FromRgb(255, 240, 255);
-                    editorFg = Color.FromRgb(70, 0, 70);
-                    lineNumbersFg = Color.FromRgb(180, 100, 180);
-                    currentLineBg = Color.FromRgb(255, 215, 255);
-                    break;
-
-                case "Khaki":
-                    windowBg = Color.FromRgb(200, 200, 160);
-                    panelBg = Color.FromRgb(215, 215, 175);
-                    textFg = Color.FromRgb(95, 95, 0);
-                    borderBrush = Color.FromRgb(180, 180, 140);
-                    altRowBg = Color.FromRgb(208, 208, 168);
-                    statusBg = Color.FromRgb(185, 185, 145);
-                    editorBg = Color.FromRgb(215, 215, 175);
-                    editorFg = Color.FromRgb(95, 95, 0);
-                    lineNumbersFg = Color.FromRgb(130, 130, 60);
-                    currentLineBg = Color.FromRgb(200, 200, 160);
                     break;
 
                 case "Default Light":
@@ -668,6 +525,20 @@ public partial class MainWindow : Window
 
                     border.Width = newWidth;
                     border.Height = newHeight;
+
+                    // Force the parent Popup to recalculate its window position and size.
+                    // Toggling HorizontalOffset slightly triggers WPF to refresh the popup native window boundaries.
+                    var popup = LogicalTreeHelper.GetParent(border) as Popup;
+                    if (popup == null && border.Parent is Popup p)
+                    {
+                        popup = p;
+                    }
+                    if (popup != null)
+                    {
+                        var offset = popup.HorizontalOffset;
+                        popup.HorizontalOffset = offset + 0.01;
+                        popup.HorizontalOffset = offset;
+                    }
                 }
             }
         }

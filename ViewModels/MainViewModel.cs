@@ -120,17 +120,11 @@ namespace smartFinder.ViewModels
             {
                 AvailableSubThemes.Add("SmartFinder Dark");
                 AvailableSubThemes.Add("Default Dark");
-                AvailableSubThemes.Add("Nord Dark");
-                AvailableSubThemes.Add("Midnight Black");
-                AvailableSubThemes.Add("Deep Black");
                 AvailableSubThemes.Add("Monokai");
                 AvailableSubThemes.Add("Obsidian");
-                AvailableSubThemes.Add("Solarized Dark");
                 AvailableSubThemes.Add("Ruby Blue");
                 AvailableSubThemes.Add("Twilight");
-                AvailableSubThemes.Add("Zenburn");
                 AvailableSubThemes.Add("Choco");
-                AvailableSubThemes.Add("Bespin");
 
                 if (string.IsNullOrEmpty(SelectedSubTheme) || !AvailableSubThemes.Contains(SelectedSubTheme))
                 {
@@ -141,11 +135,6 @@ namespace smartFinder.ViewModels
             {
                 AvailableSubThemes.Add("SmartFinder Light");
                 AvailableSubThemes.Add("Default Light");
-                AvailableSubThemes.Add("Warm Sepia");
-                AvailableSubThemes.Add("Ice Blue");
-                AvailableSubThemes.Add("Solarized Light");
-                AvailableSubThemes.Add("Hello Kitty");
-                AvailableSubThemes.Add("Khaki");
 
                 if (string.IsNullOrEmpty(SelectedSubTheme) || !AvailableSubThemes.Contains(SelectedSubTheme))
                 {
