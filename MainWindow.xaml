@@ -8,7 +8,7 @@
         xmlns:conv="clr-namespace:smartFinder.Converters"
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d"
-        Title="Smart Finder" Height="700" Width="1200"
+        Title="Smart Finder v1.5" Height="700" Width="1200"
         Icon="window_icon.ico"
         Background="{DynamicResource WindowBg}">
     <Window.DataContext>
