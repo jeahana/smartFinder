@@ -250,7 +250,7 @@
                                                             </ToggleButton.Template>
                                                         </ToggleButton>
                                                         <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
-                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
                                                                 <Border.Effect>
                                                                     <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
                                                                 </Border.Effect>
@@ -328,7 +328,7 @@
                                                             </ToggleButton.Template>
                                                         </ToggleButton>
                                                         <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
-                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
                                                                 <Border.Effect>
                                                                     <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
                                                                 </Border.Effect>
@@ -406,7 +406,7 @@
                                                             </ToggleButton.Template>
                                                         </ToggleButton>
                                                         <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
-                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
                                                                 <Border.Effect>
                                                                     <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
                                                                 </Border.Effect>
@@ -484,7 +484,7 @@
                                                             </ToggleButton.Template>
                                                         </ToggleButton>
                                                         <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
-                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
                                                                 <Border.Effect>
                                                                     <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
                                                                 </Border.Effect>
@@ -562,7 +562,7 @@
                                                             </ToggleButton.Template>
                                                         </ToggleButton>
                                                         <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
-                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
                                                                 <Border.Effect>
                                                                     <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
                                                                 </Border.Effect>
@@ -640,7 +640,7 @@
                                                             </ToggleButton.Template>
                                                         </ToggleButton>
                                                         <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
-                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
                                                                 <Border.Effect>
                                                                     <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
                                                                 </Border.Effect>
@@ -718,7 +718,7 @@
                                                             </ToggleButton.Template>
                                                         </ToggleButton>
                                                         <Popup IsOpen="{Binding IsChecked, ElementName=FilterButton, Mode=TwoWay}" PlacementTarget="{Binding ElementName=FilterButton}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade">
-                                                            <Border Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
+                                                            <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="{DynamicResource PanelBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="6" Width="200" Height="260" MinWidth="180" MinHeight="180">
                                                                 <Border.Effect>
                                                                     <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15" Color="#000000"/>
                                                                 </Border.Effect>

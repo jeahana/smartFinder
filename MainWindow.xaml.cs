@@ -527,7 +527,6 @@ public partial class MainWindow : Window
                     border.Height = newHeight;
 
                     // Force the parent Popup to recalculate its window position and size.
-                    // Toggling HorizontalOffset slightly triggers WPF to refresh the popup native window boundaries.
                     var popup = LogicalTreeHelper.GetParent(border) as Popup;
                     if (popup == null && border.Parent is Popup p)
                     {
@@ -535,9 +534,17 @@ public partial class MainWindow : Window
                     }
                     if (popup != null)
                     {
-                        var offset = popup.HorizontalOffset;
-                        popup.HorizontalOffset = offset + 0.01;
-                        popup.HorizontalOffset = offset;
+                        var updateMethod = typeof(Popup).GetMethod("UpdatePosition", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        if (updateMethod != null)
+                        {
+                            updateMethod.Invoke(popup, null);
+                        }
+                        else
+                        {
+                            var offset = popup.HorizontalOffset;
+                            popup.HorizontalOffset = offset + 0.1;
+                            popup.HorizontalOffset = offset;
+                        }
                     }
                 }
             }
